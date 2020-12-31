@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Banter-Bot.NET", "Banter-Bot.NET\Banter-Bot.NET.csproj", "{85FBD78B-D012-42CF-BF84-AE954BFE6C72}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BanterBot.NET", "BanterBot.NET\BanterBot.NET.csproj", "{85FBD78B-D012-42CF-BF84-AE954BFE6C72}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
