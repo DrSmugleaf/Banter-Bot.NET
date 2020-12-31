@@ -5,7 +5,7 @@ namespace BanterBot.NET.Logging
 {
     public static class SeverityExtensions
     {
-        public static Severity From(LogSeverity severity)
+        public static Severity ToSeverity(this LogSeverity severity)
         {
             return severity switch
             {
@@ -15,11 +15,11 @@ namespace BanterBot.NET.Logging
                 LogSeverity.Info => Severity.Info,
                 LogSeverity.Verbose => Severity.Verbose,
                 LogSeverity.Debug => Severity.Debug,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(nameof(severity), severity, null)
             };
         }
 
-        public static LogSeverity ToDiscord(Severity severity)
+        public static LogSeverity ToDiscord(this Severity severity)
         {
             return severity switch
             {
@@ -29,7 +29,7 @@ namespace BanterBot.NET.Logging
                 Severity.Info => LogSeverity.Info,
                 Severity.Verbose => LogSeverity.Verbose,
                 Severity.Debug => LogSeverity.Debug,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(nameof(severity), severity, null)
             };
         }
 
@@ -44,7 +44,22 @@ namespace BanterBot.NET.Logging
                 Severity.Warning => "WARNING",
                 Severity.Error => "ERROR",
                 Severity.Fatal => "FATAL",
-                _ => throw new ArgumentOutOfRangeException()
+                _ => throw new ArgumentOutOfRangeException(nameof(severity), severity, null)
+            };
+        }
+
+        public static ConsoleColor Color(this Severity severity)
+        {
+            return severity switch
+            {
+                Severity.Unknown => ConsoleColor.DarkGray,
+                Severity.Debug => ConsoleColor.DarkGray,
+                Severity.Verbose => ConsoleColor.DarkGray,
+                Severity.Info => ConsoleColor.White,
+                Severity.Warning => ConsoleColor.Yellow,
+                Severity.Error => ConsoleColor.Red,
+                Severity.Fatal => ConsoleColor.Red,
+                _ => throw new ArgumentOutOfRangeException(nameof(severity), severity, null)
             };
         }
     }

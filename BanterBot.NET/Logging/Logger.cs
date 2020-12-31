@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Threading.Tasks;
+using Discord;
 
 namespace BanterBot.NET.Logging
 {
@@ -16,6 +18,11 @@ namespace BanterBot.NET.Logging
         public static void LogS(Severity severity, string message)
         {
             Default.Log(severity, message);
+        }
+
+        public static Task LogS(LogMessage message)
+        {
+            return Default.Log(message);
         }
 
         public static void DebugS(string message)
@@ -48,9 +55,37 @@ namespace BanterBot.NET.Logging
             Default.Fatal(message);
         }
 
-        public void Log(Severity severity, string message)
+        public Task Log(Severity severity, string message)
         {
-            Console.WriteLine($"[{severity.Abbreviation()}] {Name}: {message}");
+            Console.ForegroundColor = severity.Color();
+
+            Console.WriteLine($"{DateTime.Now,-19} [{severity.Abbreviation()}] {Name}: {message}");
+
+            Console.ResetColor();
+
+            return Task.CompletedTask;
+        }
+
+        public Task Log(Severity severity, string message, ConsoleColor color)
+        {
+            Console.ForegroundColor = color;
+
+            Console.WriteLine($"{DateTime.Now,-19} [{severity.Abbreviation()}] {Name}: {message}");
+
+            Console.ResetColor();
+
+            return Task.CompletedTask;
+        }
+
+        public Task Log(LogMessage message)
+        {
+            Console.ForegroundColor = message.Severity.ToSeverity().Color();
+
+            Console.WriteLine($"{DateTime.Now,-19} [{message.Severity}] {message.Source}: {message.Message} {message.Exception}");
+
+            Console.ResetColor();
+
+            return Task.CompletedTask;
         }
 
         public void Debug(string message)

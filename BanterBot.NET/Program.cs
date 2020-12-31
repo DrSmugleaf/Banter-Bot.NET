@@ -2,6 +2,7 @@
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using BanterBot.NET.Logging;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
@@ -11,7 +12,7 @@ namespace BanterBot.NET
 {
     class Program
     {
-        private static void Main(string[] args)
+        private static void Main()
         {
             new Program().MainAsync().GetAwaiter().GetResult();
         }
@@ -34,8 +35,8 @@ namespace BanterBot.NET
                 CaseSensitiveCommands = false
             });
 
-            _client.Log += Log;
-            _commands.Log += Log;
+            _client.Log += Logger.LogS;
+            _commands.Log += Logger.LogS;
 
             _services = ConfigureServices();
         }
@@ -44,32 +45,6 @@ namespace BanterBot.NET
         {
             var map = new ServiceCollection();
             return map.BuildServiceProvider(true);
-        }
-
-        private static Task Log(LogMessage message)
-        {
-            switch (message.Severity)
-            {
-                case LogSeverity.Critical:
-                case LogSeverity.Error:
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    break;
-                case LogSeverity.Warning:
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                    break;
-                case LogSeverity.Info:
-                    Console.ForegroundColor = ConsoleColor.White;
-                    break;
-                case LogSeverity.Verbose:
-                case LogSeverity.Debug:
-                    Console.ForegroundColor = ConsoleColor.DarkGray;
-                    break;
-            }
-
-            Console.WriteLine($"{DateTime.Now,-19} [{message.Severity,4}] {message.Source}: {message.Message} {message.Exception}");
-            Console.ResetColor();
-
-            return Task.CompletedTask;
         }
 
         private async Task MainAsync()
