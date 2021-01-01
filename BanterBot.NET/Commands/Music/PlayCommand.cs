@@ -8,7 +8,7 @@ using YoutubeExplode.Videos.Streams;
 
 namespace BanterBot.NET.Commands.Music
 {
-    public class PlayCommand : ModuleBase<SocketCommandContext>
+    public class PlayCommand : Module<SocketCommandContext>
     {
         [Command("play", RunMode = RunMode.Async)]
         public async Task Play(params string[] args)
@@ -25,8 +25,7 @@ namespace BanterBot.NET.Commands.Music
                 return;
             }
 
-            var client = await user.VoiceChannel.ConnectAsync();
-
+            var client = await EnsureConnectAsync(user.VoiceChannel);
             var youtube = new YoutubeClient();
             var link = string.Join(" ", args);
             var video = await youtube.Videos.GetAsync(link);
