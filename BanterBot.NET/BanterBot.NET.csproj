@@ -19,7 +19,7 @@
       <PackageReference Include="libsodium" Version="1.0.18" />
       <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.8" />
       <PackageReference Include="OpusDotNet" Version="1.0.3" />
-      <PackageReference Include="YoutubeExplode" Version="5.1.9" />
+      <PackageReference Include="Victoria" Version="5.1.11" />
     </ItemGroup>
 
 </Project>

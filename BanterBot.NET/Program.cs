@@ -2,15 +2,13 @@
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
-using BanterBot.NET.Commands.Music;
 using BanterBot.NET.Dependencies;
 using BanterBot.NET.Logging;
-using BanterBot.NET.Music;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
-using YoutubeExplode;
+using Victoria;
 
 namespace BanterBot.NET
 {
@@ -40,14 +38,15 @@ namespace BanterBot.NET
             });
 
             _client.Log += Logger.LogS;
+            _client.Ready += OnReady;
             _commands.Log += Logger.LogS;
 
             _services = ConfigureServices();
         }
 
-        private static DependencyManager ConfigureServices()
+        private DependencyManager ConfigureServices()
         {
-            return new();
+            return new(_client);
         }
 
         private async Task MainAsync()
@@ -83,6 +82,15 @@ namespace BanterBot.NET
                 {
                     await msg.Channel.SendMessageAsync(result.ErrorReason);
                 }
+            }
+        }
+
+        private async Task OnReady()
+        {
+            var lavaNode = _services.GetService<LavaNode>();
+            if (!lavaNode.IsConnected)
+            {
+                await lavaNode.ConnectAsync();
             }
         }
     }

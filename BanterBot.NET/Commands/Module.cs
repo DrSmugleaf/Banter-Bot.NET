@@ -1,7 +1,4 @@
-using System.Threading.Tasks;
-using BanterBot.NET.Extensions;
 using Discord;
-using Discord.Audio;
 using Discord.Commands;
 
 namespace BanterBot.NET.Commands

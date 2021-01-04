@@ -7,7 +7,7 @@ namespace BanterBot.NET.Commands
 {
     public class HelpCommand : ModuleBase<SocketCommandContext>
     {
-        [ServiceDependency] public CommandService CommandService { get; }
+        [ServiceDependency] public CommandService CommandService { get; } = default!;
 
         [Command("help")]
         public async Task Help()

@@ -2,8 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using BanterBot.NET.Extensions;
+using Discord;
+using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
-using YoutubeExplode;
+using Victoria;
 
 namespace BanterBot.NET.Dependencies
 {
@@ -13,7 +15,7 @@ namespace BanterBot.NET.Dependencies
 
         private ServiceProvider ServiceProvider { get; }
 
-        public DependencyManager()
+        public DependencyManager(DiscordSocketClient client)
         {
             var collection = new ServiceCollection();
 
@@ -34,7 +36,12 @@ namespace BanterBot.NET.Dependencies
                 collection.AddSingleton(type, instance);
             }
 
-            collection.AddSingleton(new YoutubeClient());
+            collection
+                .AddSingleton(client)
+                .AddLavaNode(c =>
+                {
+                    c.SelfDeaf = false;
+                });
 
             var options = new ServiceProviderOptions
             {
@@ -52,6 +59,11 @@ namespace BanterBot.NET.Dependencies
             foreach (var descriptor in collection)
             {
                 var instance = descriptor.ImplementationInstance;
+
+                if (instance == null)
+                {
+                    continue;
+                }
 
                 foreach (var field in instance.GetType().GetFields())
                 {

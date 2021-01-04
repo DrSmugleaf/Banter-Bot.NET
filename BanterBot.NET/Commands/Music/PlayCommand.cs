@@ -1,21 +1,21 @@
+using System;
 using System.Threading.Tasks;
+using BanterBot.NET.Extensions;
 using Discord;
 using Discord.Commands;
-using YoutubeExplode;
-using YoutubeExplode.Videos.Streams;
+using Victoria;
+using Victoria.Enums;
 
 namespace BanterBot.NET.Commands.Music
 {
     public class PlayCommand : Module<SocketCommandContext>
     {
-        public DiscordMusicService DiscordMusicService { get; set; }
-
-        public YoutubeClient YoutubeClient { get; set; }
+        public LavaNode LavaNode { get; set; } = default!;
 
         [Command("play", RunMode = RunMode.Async)]
         public async Task Play(params string[] args)
         {
-            if (User is not IGuildUser user || Channel is not ITextChannel channel)
+            if (User is not IGuildUser user || Channel is not ITextChannel text)
             {
                 await ReplyAsync("This command can only be used in a server.");
                 return;
@@ -27,24 +27,39 @@ namespace BanterBot.NET.Commands.Music
                 return;
             }
 
-            var link = string.Join(" ", args);
-            var video = await YoutubeClient.Videos.GetAsync(link);
-            var title = video.Title;
-            var author = video.Author;
-            var duration = video.Duration;
-            var streamManifest = await YoutubeClient.Videos.Streams.GetManifestAsync(video.Id);
-            var streamInfo = streamManifest.GetAudioOnly().WithHighestBitrate();
+            var query = string.Join(" ", args);
+            var search = await LavaNode.SearchYouTubeAsync(query);
 
-            if (streamInfo == null)
+            switch (search.LoadStatus)
             {
-                await ReplyAsync($"No video found with link {link}");
-                return;
+                case LoadStatus.TrackLoaded:
+                case LoadStatus.PlaylistLoaded:
+                    break;
+                case LoadStatus.SearchResult:
+                    var player = await LavaNode.EnsureJoin(user.VoiceChannel, text);
+
+                    if (!search.Tracks.TryFirst(out var first))
+                    {
+                        await ReplyAsync($"No matches found for `{query}`.");
+                        return;
+                    }
+
+                    var playing = await player.PlayOrEnqueue(first);
+                    var response = playing
+                        ? $"Now playing `{first.Title}`."
+                        : $"Added `{first.Title}` to the queue.";
+
+                    await ReplyAsync(response);
+                    break;
+                case LoadStatus.NoMatches:
+                    await ReplyAsync($"No matches found for `{query}`.");
+                    return;
+                case LoadStatus.LoadFailed:
+                    await ReplyAsync($"An error occurred when searching for `{query}`.");
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
-
-            var youtubeTrack = new YoutubeTrack(streamInfo, DiscordMusicService.PlayYoutube);
-            var trackInformation = new DiscordTrackInformation(channel, user, title, author, duration);
-
-            DiscordMusicService.AddTrack(youtubeTrack, trackInformation);
         }
     }
 }
