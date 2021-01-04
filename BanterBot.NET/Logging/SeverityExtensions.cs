@@ -52,9 +52,9 @@ namespace BanterBot.NET.Logging
         {
             return severity switch
             {
-                Severity.Unknown => ConsoleColor.DarkGray,
-                Severity.Debug => ConsoleColor.DarkGray,
-                Severity.Verbose => ConsoleColor.DarkGray,
+                Severity.Unknown => ConsoleColor.Gray,
+                Severity.Debug => ConsoleColor.Gray,
+                Severity.Verbose => ConsoleColor.Gray,
                 Severity.Info => ConsoleColor.White,
                 Severity.Warning => ConsoleColor.Yellow,
                 Severity.Error => ConsoleColor.Red,

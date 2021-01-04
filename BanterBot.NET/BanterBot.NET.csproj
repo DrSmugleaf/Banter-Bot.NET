@@ -8,6 +8,7 @@
         <LangVersion>9</LangVersion>
         <Configurations>Release;Debug</Configurations>
         <Platforms>x64</Platforms>
+        <Nullable>enable</Nullable>
     </PropertyGroup>
 
     <ItemGroup>

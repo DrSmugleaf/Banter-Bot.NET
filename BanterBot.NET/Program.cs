@@ -2,15 +2,19 @@
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using BanterBot.NET.Commands.Music;
+using BanterBot.NET.Dependencies;
 using BanterBot.NET.Logging;
+using BanterBot.NET.Music;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
+using YoutubeExplode;
 
 namespace BanterBot.NET
 {
-    class Program
+    internal class Program
     {
         private static void Main()
         {
@@ -19,7 +23,7 @@ namespace BanterBot.NET
 
         private readonly DiscordSocketClient _client;
         private readonly CommandService _commands;
-        private readonly IServiceProvider _services;
+        private readonly DependencyManager _services;
 
         private Program()
         {
@@ -41,10 +45,9 @@ namespace BanterBot.NET
             _services = ConfigureServices();
         }
 
-        private static IServiceProvider ConfigureServices()
+        private static DependencyManager ConfigureServices()
         {
-            var map = new ServiceCollection();
-            return map.BuildServiceProvider(true);
+            return new();
         }
 
         private async Task MainAsync()

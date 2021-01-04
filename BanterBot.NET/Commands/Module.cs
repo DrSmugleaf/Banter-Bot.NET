@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using BanterBot.NET.Extensions;
 using Discord;
 using Discord.Audio;
 using Discord.Commands;
@@ -7,18 +8,14 @@ namespace BanterBot.NET.Commands
 {
     public abstract class Module<T> : ModuleBase<T> where T : class, ICommandContext
     {
-        protected async Task<IAudioClient> EnsureConnectAsync(IVoiceChannel channel)
-        {
-            DebugTools.AssertNotNull(channel);
+        protected IDiscordClient Client => Context.Client;
 
-            var user = await channel.Guild.GetCurrentUserAsync();
+        protected IGuild Guild => Context.Guild;
 
-            if (user.VoiceChannel != channel)
-            {
-                return await channel.ConnectAsync();
-            }
+        protected IMessageChannel Channel => Context.Channel;
 
-            return user.Guild.AudioClient;
-        }
+        protected IUser User => Context.User;
+
+        protected IUserMessage Message => Context.Message;
     }
 }

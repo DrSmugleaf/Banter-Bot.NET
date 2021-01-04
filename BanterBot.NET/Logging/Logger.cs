@@ -6,7 +6,7 @@ namespace BanterBot.NET.Logging
 {
     public class Logger
     {
-        private static readonly Logger Default = new Logger("Default");
+        private static readonly Logger Default = new("Default");
 
         public Logger(string name)
         {

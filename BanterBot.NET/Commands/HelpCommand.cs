@@ -1,12 +1,13 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using BanterBot.NET.Dependencies;
 using Discord.Commands;
 
 namespace BanterBot.NET.Commands
 {
     public class HelpCommand : ModuleBase<SocketCommandContext>
     {
-        public CommandService CommandService { get; set; }
+        [ServiceDependency] public CommandService CommandService { get; }
 
         [Command("help")]
         public async Task Help()

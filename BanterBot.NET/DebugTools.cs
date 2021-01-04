@@ -1,4 +1,3 @@
-#nullable enable
 using System;
 using System.Diagnostics;
 using JetBrains.Annotations;
@@ -13,7 +12,7 @@ namespace BanterBot.NET
         {
             if (arg == null)
             {
-                throw new ArgumentException();
+                throw new ArgumentNullException();
             }
         }
     }

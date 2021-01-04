@@ -1,7 +1,5 @@
-using System.Diagnostics;
 using System.Threading.Tasks;
 using Discord;
-using Discord.Audio;
 using Discord.Commands;
 using YoutubeExplode;
 using YoutubeExplode.Videos.Streams;
@@ -10,10 +8,14 @@ namespace BanterBot.NET.Commands.Music
 {
     public class PlayCommand : Module<SocketCommandContext>
     {
+        public DiscordMusicService DiscordMusicService { get; set; }
+
+        public YoutubeClient YoutubeClient { get; set; }
+
         [Command("play", RunMode = RunMode.Async)]
         public async Task Play(params string[] args)
         {
-            if (Context.User is not IGuildUser user)
+            if (User is not IGuildUser user || Channel is not ITextChannel channel)
             {
                 await ReplyAsync("This command can only be used in a server.");
                 return;
@@ -25,14 +27,12 @@ namespace BanterBot.NET.Commands.Music
                 return;
             }
 
-            var client = await EnsureConnectAsync(user.VoiceChannel);
-            var youtube = new YoutubeClient();
             var link = string.Join(" ", args);
-            var video = await youtube.Videos.GetAsync(link);
+            var video = await YoutubeClient.Videos.GetAsync(link);
             var title = video.Title;
             var author = video.Author;
             var duration = video.Duration;
-            var streamManifest = await youtube.Videos.Streams.GetManifestAsync(video.Id);
+            var streamManifest = await YoutubeClient.Videos.Streams.GetManifestAsync(video.Id);
             var streamInfo = streamManifest.GetAudioOnly().WithHighestBitrate();
 
             if (streamInfo == null)
@@ -41,37 +41,10 @@ namespace BanterBot.NET.Commands.Music
                 return;
             }
 
-            await youtube.Videos.Streams.DownloadAsync(streamInfo, $"video.{streamInfo.Container}");
-            await SendAsync(client, streamInfo.Url);
+            var youtubeTrack = new YoutubeTrack(streamInfo, DiscordMusicService.PlayYoutube);
+            var trackInformation = new DiscordTrackInformation(channel, user, title, author, duration);
 
-            await ReplyAsync($"Now playing {title} by {author}. Duration: {duration.TotalSeconds} seconds");
-        }
-
-        private Process CreateStream(string path)
-        {
-            return Process.Start(new ProcessStartInfo
-            {
-                FileName = "ffmpeg",
-                Arguments = $"-hide_banner -loglevel panic -i \"{path}\" -ac 2 -f s16le -ar 48000 pipe:1",
-                UseShellExecute = false,
-                RedirectStandardOutput = true,
-            });
-        }
-
-        private async Task SendAsync(IAudioClient client, string path)
-        {
-            using var ffmpeg = CreateStream(path);
-            await using var output = ffmpeg.StandardOutput.BaseStream;
-            await using var discord = client.CreatePCMStream(AudioApplication.Mixed);
-
-            try
-            {
-                await output.CopyToAsync(discord);
-            }
-            finally
-            {
-                await discord.FlushAsync();
-            }
+            DiscordMusicService.AddTrack(youtubeTrack, trackInformation);
         }
     }
 }
