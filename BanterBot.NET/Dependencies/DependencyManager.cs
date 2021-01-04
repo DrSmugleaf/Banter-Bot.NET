@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using BanterBot.NET.Extensions;
-using Discord;
 using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
 using Victoria;
@@ -26,14 +25,7 @@ namespace BanterBot.NET.Dependencies
                     continue;
                 }
 
-                var instance = Activator.CreateInstance(type);
-
-                if (instance == null)
-                {
-                    throw new InvalidOperationException();
-                }
-
-                collection.AddSingleton(type, instance);
+                collection.AddSingleton(type);
             }
 
             collection
