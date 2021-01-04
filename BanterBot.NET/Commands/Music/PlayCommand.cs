@@ -28,13 +28,14 @@ namespace BanterBot.NET.Commands.Music
             }
 
             var query = string.Join(" ", args);
-            var search = await LavaNode.SearchYouTubeAsync(query);
+            var search = Uri.IsWellFormedUriString(query, UriKind.Absolute) ?
+                await LavaNode.SearchAsync(query) :
+                await LavaNode.SearchYouTubeAsync(query);
 
             switch (search.LoadStatus)
             {
                 case LoadStatus.TrackLoaded:
                 case LoadStatus.PlaylistLoaded:
-                    break;
                 case LoadStatus.SearchResult:
                     var player = await LavaNode.EnsureJoin(user.VoiceChannel, text);
 
