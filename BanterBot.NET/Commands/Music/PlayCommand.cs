@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using BanterBot.NET.Extensions;
+using BanterBot.NET.Music;
 using Discord;
 using Discord.Commands;
 using Victoria;
@@ -11,6 +12,8 @@ namespace BanterBot.NET.Commands.Music
     public class PlayCommand : Module<SocketCommandContext>
     {
         public LavaNode LavaNode { get; set; } = default!;
+
+        public MusicService MusicService { get; set; } = default!;
 
         [Command("play", RunMode = RunMode.Async)]
         public async Task Play(params string[] args)
@@ -41,22 +44,22 @@ namespace BanterBot.NET.Commands.Music
 
                     if (!search.Tracks.TryFirst(out var first))
                     {
-                        await ReplyAsync($"No matches found for `{query}`.");
+                        await ReplyAsync($"No matches found for `{query}`");
                         return;
                     }
 
                     var playing = await player.PlayOrEnqueue(first);
                     var response = playing
-                        ? $"Now playing `{first.Title}`."
+                        ? $"Now playing `{first.Title}`"
                         : $"Added `{first.Title}` to the queue.";
 
                     await ReplyAsync(response);
                     break;
                 case LoadStatus.NoMatches:
-                    await ReplyAsync($"No matches found for `{query}`.");
+                    await ReplyAsync($"No matches found for `{query}`");
                     return;
                 case LoadStatus.LoadFailed:
-                    await ReplyAsync($"An error occurred when searching for `{query}`.");
+                    await ReplyAsync($"An error occurred when searching for `{query}`");
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

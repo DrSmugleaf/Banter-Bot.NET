@@ -25,7 +25,7 @@ namespace BanterBot.NET.Dependencies
                     continue;
                 }
 
-                collection.AddSingleton(type);
+                collection.AddSingleton(type, type);
             }
 
             collection
