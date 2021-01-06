@@ -30,6 +30,10 @@
       <EmbeddedResource Include="application.yml">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </EmbeddedResource>
+      <None Remove=".env" />
+      <EmbeddedResource Include=".env">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </EmbeddedResource>
     </ItemGroup>
 
 </Project>

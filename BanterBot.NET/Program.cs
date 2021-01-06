@@ -53,7 +53,9 @@ namespace BanterBot.NET
         {
             await InitCommands();
 
-            await _client.LoginAsync(TokenType.Bot, Environment.GetEnvironmentVariable("DiscordToken"));
+            var token = Environment.GetEnvironmentVariable("DiscordToken") ?? throw new InvalidOperationException("DiscordToken environment variable is not set.");
+
+            await _client.LoginAsync(TokenType.Bot, token);
             await _client.StartAsync();
 
             await Task.Delay(Timeout.Infinite);

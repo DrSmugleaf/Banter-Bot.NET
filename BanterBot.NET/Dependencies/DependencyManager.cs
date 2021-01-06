@@ -42,18 +42,16 @@ namespace BanterBot.NET.Dependencies
                 ValidateOnBuild = true
             };
 
-            foreach (var descriptor in collection)
-            {
-                _services.Add(descriptor.ServiceType, descriptor.ImplementationInstance);
-            }
-
             ServiceProvider = collection.BuildServiceProvider(options);
 
             foreach (var descriptor in collection)
             {
-                var instance = descriptor.ImplementationInstance;
+                var type = descriptor.ServiceType;
+                var instance = ServiceProvider.GetService(type);
 
-                if (instance == null)
+                _services.Add(type, instance);
+
+                if (!instance.GetType().HasAttribute<ServiceAttribute>())
                 {
                     continue;
                 }
