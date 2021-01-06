@@ -21,4 +21,15 @@
       <PackageReference Include="Victoria" Version="5.1.11" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Remove="Lavalink.jar" />
+      <EmbeddedResource Include="Lavalink.jar">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="application.yml" />
+      <EmbeddedResource Include="application.yml">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+    </ItemGroup>
+
 </Project>

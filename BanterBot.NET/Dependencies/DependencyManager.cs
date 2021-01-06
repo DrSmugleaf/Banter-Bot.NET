@@ -33,6 +33,7 @@ namespace BanterBot.NET.Dependencies
                 .AddLavaNode(c =>
                 {
                     c.SelfDeaf = false;
+                    c.Port = 8080;
                 });
 
             var options = new ServiceProviderOptions
