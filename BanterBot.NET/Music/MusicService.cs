@@ -29,6 +29,9 @@ namespace BanterBot.NET.Music
                 CreateNoWindow = true
             }) ?? throw new InvalidOperationException();
 
+            AppDomain.CurrentDomain.ProcessExit += OnProcessExit;
+            Console.CancelKeyPress += OnProcessExit;
+
             LavaLink.OutputDataReceived += OutputDataReceived;
             LavaLink.ErrorDataReceived += ErrorDataReceived;
             LavaLink.BeginOutputReadLine();
@@ -60,6 +63,27 @@ namespace BanterBot.NET.Music
         public void Dispose()
         {
             LavaLink.Dispose();
+        }
+
+        private void FinalizeInternal()
+        {
+            var processId = LavaLink.Id;
+
+            Console.WriteLine($"Killing process {processId}");
+
+            LavaLink.CloseMainWindow();
+            LavaLink.Close();
+            LavaLink.Kill();
+        }
+
+        private void OnProcessExit(object? sender, EventArgs e)
+        {
+            FinalizeInternal();
+        }
+
+        ~MusicService()
+        {
+            FinalizeInternal();
         }
     }
 }
