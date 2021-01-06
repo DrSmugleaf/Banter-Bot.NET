@@ -1,0 +1,11 @@
+version: "3.9"
+services:
+  bot:
+    restart: unless-stopped
+    build: .
+    ports:
+      - "8000:80"
+    depends_on:
+      - "lavalink"
+  lavalink:
+    image: "fredboat/lavalink:master"
