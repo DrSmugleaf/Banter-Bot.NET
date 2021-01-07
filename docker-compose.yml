@@ -1,6 +1,7 @@
 version: "3.9"
 services:
   bot:
+    container_name: banterbotnet_1
     restart: unless-stopped
     build: .
     networks:
