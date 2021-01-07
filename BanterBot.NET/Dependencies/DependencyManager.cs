@@ -28,12 +28,17 @@ namespace BanterBot.NET.Dependencies
                 collection.AddSingleton(type, type);
             }
 
+            if (!EnvironmentExtensions.TryGetEnvironmentVariable("lavahost", out var lavaHost))
+            {
+                throw new InvalidOperationException("lavahost environment variable has not been set");
+            }
+
             collection
                 .AddSingleton(client)
                 .AddLavaNode(c =>
                 {
                     c.SelfDeaf = false;
-                    c.Hostname = "lavalink_1";
+                    c.Hostname = lavaHost;
                     c.Port = 8080;
                 });
 
