@@ -33,6 +33,7 @@ namespace BanterBot.NET.Dependencies
                 .AddLavaNode(c =>
                 {
                     c.SelfDeaf = false;
+                    c.Hostname = "lavalink_1";
                     c.Port = 8080;
                 });
 

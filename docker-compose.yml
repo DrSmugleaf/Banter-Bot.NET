@@ -3,12 +3,22 @@ services:
   bot:
     restart: unless-stopped
     build: .
+    networks:
+    - bot
+    depends_on:
+    - lavalink
   lavalink:
     image: "fredboat/lavalink:master-v3.3.2.3"
-    command: --network host
-    ports:
-    - "8080:8080"
+    container_name: lavalink_1
+    restart: unless-stopped
     volumes:
     - type: bind
       source: ./application.yml
       target: /opt/Lavalink/application.yml
+    networks:
+    - bot
+    expose:
+    - 8080
+networks:
+  bot:
+    name: bot
