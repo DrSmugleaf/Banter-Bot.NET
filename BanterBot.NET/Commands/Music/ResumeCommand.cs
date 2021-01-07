@@ -12,7 +12,7 @@ namespace BanterBot.NET.Commands.Music
         public LavaNode LavaNode { get; set; } = default!;
 
         [Command("resume", RunMode = RunMode.Async)]
-        public async Task Resume(params string[] args)
+        public async Task Resume()
         {
             if (User is not IGuildUser user)
             {

@@ -13,8 +13,6 @@ namespace BanterBot.NET.Commands.Music
     {
         public LavaNode LavaNode { get; set; } = default!;
 
-        public MusicService MusicService { get; set; } = default!;
-
         [Command("play", RunMode = RunMode.Async)]
         public async Task Play(params string[] args)
         {
