@@ -10,15 +10,20 @@ namespace BanterBot.NET.Environments
         public EnvironmentService()
         {
             var directory = Environment.CurrentDirectory;
-            var lines = File.ReadLines(directory + "/.env");
+            var envFilePath = directory + "/.env";
 
-            foreach (var line in lines)
+            if (File.Exists(envFilePath))
             {
-                var split = line.Split('=', 2);
-                var key = split[0];
-                var value = split[1];
+                var lines = File.ReadLines(envFilePath);
 
-                Environment.SetEnvironmentVariable(key, value);
+                foreach (var line in lines)
+                {
+                    var split = line.Split('=', 2);
+                    var key = split[0];
+                    var value = split[1];
+
+                    Environment.SetEnvironmentVariable(key, value);
+                }
             }
         }
     }
