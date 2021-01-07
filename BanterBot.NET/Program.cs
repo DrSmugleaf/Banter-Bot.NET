@@ -1,8 +1,8 @@
-﻿using System;
-using System.Reflection;
+﻿using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using BanterBot.NET.Dependencies;
+using BanterBot.NET.Environments;
 using BanterBot.NET.Logging;
 using Discord;
 using Discord.Commands;
@@ -53,7 +53,7 @@ namespace BanterBot.NET
         {
             await InitCommands();
 
-            var token = Environment.GetEnvironmentVariable("DiscordToken") ?? throw new InvalidOperationException("DiscordToken environment variable is not set.");
+            var token = EnvironmentKey.DiscordToken.GetOrThrow();
 
             await _client.LoginAsync(TokenType.Bot, token);
             await _client.StartAsync();

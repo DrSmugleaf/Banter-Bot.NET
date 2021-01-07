@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using BanterBot.NET.Environments;
 using BanterBot.NET.Extensions;
 using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
@@ -28,17 +29,12 @@ namespace BanterBot.NET.Dependencies
                 collection.AddSingleton(type, type);
             }
 
-            if (!EnvironmentExtensions.TryGetEnvironmentVariable("lavahost", out var lavaHost))
-            {
-                throw new InvalidOperationException("lavahost environment variable has not been set");
-            }
-
             collection
                 .AddSingleton(client)
                 .AddLavaNode(c =>
                 {
                     c.SelfDeaf = false;
-                    c.Hostname = lavaHost;
+                    c.Hostname = EnvironmentKey.Lavahost.GetOrThrow();
                     c.Port = 8080;
                 });
 

@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using BanterBot.NET.Dependencies;
 
@@ -8,7 +9,7 @@ namespace BanterBot.NET.Environments
     {
         public EnvironmentService()
         {
-            var directory = System.Environment.CurrentDirectory;
+            var directory = Environment.CurrentDirectory;
             var lines = File.ReadLines(directory + "/.env");
 
             foreach (var line in lines)
@@ -17,7 +18,7 @@ namespace BanterBot.NET.Environments
                 var key = split[0];
                 var value = split[1];
 
-                System.Environment.SetEnvironmentVariable(key, value);
+                Environment.SetEnvironmentVariable(key, value);
             }
         }
     }
