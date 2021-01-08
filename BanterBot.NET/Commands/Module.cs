@@ -7,7 +7,7 @@ namespace BanterBot.NET.Commands
     {
         protected IDiscordClient Client => Context.Client;
 
-        protected IGuild Guild => Context.Guild;
+        protected IGuild? Guild => Context.Guild;
 
         protected IMessageChannel Channel => Context.Channel;
 

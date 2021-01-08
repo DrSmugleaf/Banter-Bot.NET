@@ -5,7 +5,7 @@ using Discord.Commands;
 
 namespace BanterBot.NET.Commands
 {
-    public class HelpCommand : ModuleBase<SocketCommandContext>
+    public class HelpCommand : Module<SocketCommandContext>
     {
         [ServiceDependency] public CommandService CommandService { get; } = default!;
 

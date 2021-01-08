@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using BanterBot.NET.Database.Guilds;
@@ -38,19 +39,12 @@ namespace BanterBot.NET
                 CaseSensitiveCommands = false
             });
 
+            _services = ConfigureServices();
+
             _client.Log += Logger.LogS;
             _client.Ready += OnReady;
-            _client.GuildAvailable += guild =>
-            {
-                using var db = new GuildContext();
-                db.Database.EnsureCreated();
-                db.Add(new Guild {Id = guild.Id});
-                db.SaveChanges();
-                return Task.CompletedTask;
-            };
+            _client.GuildAvailable += OnGuildAvailable;
             _commands.Log += Logger.LogS;
-
-            _services = ConfigureServices();
         }
 
         private DependencyManager ConfigureServices()
@@ -82,8 +76,16 @@ namespace BanterBot.NET
             if (msg.Author.Id == _client.CurrentUser.Id || msg.Author.IsBot) return;
 
             var pos = 0;
+            var prefix = "!";
 
-            if (msg.HasCharPrefix('!', ref pos) ||
+            if (arg.Channel is ITextChannel channel)
+            {
+                await using var guildContext = new GuildContext();
+                var guild = guildContext.Guilds.Single(g => g.Id == channel.GuildId);
+                prefix = guild.Prefix ?? "!";
+            }
+
+            if (msg.HasStringPrefix(prefix, ref pos) ||
                 msg.HasMentionPrefix(_client.CurrentUser, ref pos))
             {
                 var context = new SocketCommandContext(_client, msg);
@@ -98,11 +100,25 @@ namespace BanterBot.NET
 
         private async Task OnReady()
         {
-            var lavaNode = _services.GetService<LavaNode>();
+            var lavaNode = _services.GetRequiredService<LavaNode>();
+
             if (!lavaNode.IsConnected)
             {
                 await lavaNode.ConnectAsync();
             }
+        }
+
+        private async Task OnGuildAvailable(SocketGuild arg)
+        {
+            await using var db = new GuildContext();
+
+            if (db.Guilds.Any(guild => guild.Id == arg.Id))
+            {
+                return;
+            }
+
+            db.Add(new Guild {Id = arg.Id});
+            await db.SaveChangesAsync();
         }
     }
 }

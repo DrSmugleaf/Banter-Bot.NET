@@ -1,15 +1,11 @@
-using BanterBot.NET.Environments;
+using BanterBot.NET.Dependencies;
 using Microsoft.EntityFrameworkCore;
 
 namespace BanterBot.NET.Database.Guilds
 {
-    public class GuildContext : DbContext
+    [Service(ServiceScope.Scoped)]
+    public class GuildContext : DatabaseContext
     {
-        public DbSet<Guild> Guilds { get; set; }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseNpgsql($"Host={EnvironmentKey.PostgresHost.GetOrThrow()};Username={EnvironmentKey.PostgresUser.GetOrThrow()};Password={EnvironmentKey.PostgresPassword.GetOrThrow()};Database={EnvironmentKey.PostgresDb.GetOrThrow()}");
-        }
+        public DbSet<Guild> Guilds { get; set; } = default!;
     }
 }
