@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using BanterBot.NET.Database.Guilds;
 using BanterBot.NET.Dependencies;
 using BanterBot.NET.Environments;
 using BanterBot.NET.Logging;
@@ -39,6 +40,14 @@ namespace BanterBot.NET
 
             _client.Log += Logger.LogS;
             _client.Ready += OnReady;
+            _client.GuildAvailable += guild =>
+            {
+                using var db = new GuildContext();
+                db.Database.EnsureCreated();
+                db.Add(new Guild {Id = guild.Id});
+                db.SaveChanges();
+                return Task.CompletedTask;
+            };
             _commands.Log += Logger.LogS;
 
             _services = ConfigureServices();

@@ -3,6 +3,10 @@ namespace BanterBot.NET.Environments
     public enum EnvironmentKey
     {
         DiscordToken,
-        Lavahost
+        Lavahost,
+        PostgresHost,
+        PostgresUser,
+        PostgresPassword,
+        PostgresDb
     }
 }

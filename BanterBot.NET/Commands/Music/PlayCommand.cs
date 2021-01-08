@@ -1,7 +1,6 @@
 using System;
 using System.Threading.Tasks;
 using BanterBot.NET.Extensions;
-using BanterBot.NET.Music;
 using Discord;
 using Discord.Commands;
 using Victoria;

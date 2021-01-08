@@ -17,15 +17,13 @@
       <PackageReference Include="Discord.Net.WebSocket" Version="2.2.0" />
       <PackageReference Include="JetBrains.Annotations" Version="2020.3.0" />
       <PackageReference Include="libsodium" Version="1.0.18" />
-      <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.8" />
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.1" />
+      <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="5.0.1" />
       <PackageReference Include="Victoria" Version="5.1.11" />
     </ItemGroup>
 
     <ItemGroup>
       <None Remove=".env" />
-      <EmbeddedResource Include=".env">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </EmbeddedResource>
     </ItemGroup>
 
 </Project>

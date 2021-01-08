@@ -6,13 +6,20 @@ services:
     build: .
     networks:
     - bot
+    - db
     depends_on:
     - lavalink
+    - db
     environment:
-    - Lavahost=lavalink_1
+    - DiscordToken=${DISCORD_TOKEN}
+    - Lavahost=${LAVAHOST}
+    - PostgresHost=${POSTGRES_HOST}
+    - PostgresUser=${POSTGRES_USER}
+    - PostgresPassword=${POSTGRES_PASSWORD}
+    - PostgresDb=${POSTGRES_DB}
   lavalink:
     image: "fredboat/lavalink:master-v3.3.2.3"
-    container_name: lavalink_1
+    container_name: ${LAVAHOST}
     restart: unless-stopped
     volumes:
     - type: bind
@@ -22,6 +29,20 @@ services:
     - bot
     expose:
     - 8080
+  db:
+    image: postgres
+    container_name: db_1
+    restart: always
+    environment:
+    - POSTGRES_DB=${POSTGRES_DB}
+    - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    - POSTGRES_USER=${POSTGRES_USER}
+    networks:
+    - db
+    ports:
+    - 5432:5432
 networks:
   bot:
     name: bot
+  db:
+    name: db
