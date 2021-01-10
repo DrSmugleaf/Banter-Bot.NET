@@ -13,7 +13,7 @@ namespace BanterBot.NET.Commands.Music
         [Command("queue", RunMode = RunMode.Async)]
         public async Task Queue()
         {
-            if (User is not IGuildUser user)
+            if (Author is not IGuildUser user)
             {
                 await ReplyAsync("This command can only be used in a server.");
                 return;

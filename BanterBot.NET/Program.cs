@@ -89,11 +89,12 @@ namespace BanterBot.NET
                 msg.HasMentionPrefix(_client.CurrentUser, ref pos))
             {
                 var context = new SocketCommandContext(_client, msg);
-                var result = await _commands.ExecuteAsync(context, pos, _services);
+                var result = await _commands.ExecuteAsync(context, pos, _services, MultiMatchHandling.Best);
 
                 if (!result.IsSuccess && result.Error != CommandError.UnknownCommand)
                 {
-                    await msg.Channel.SendMessageAsync(result.ErrorReason);
+                    Logger.ErrorS($"Error executing command: {result.ErrorReason}");
+                    await msg.Channel.SendMessageAsync("An unknown error has occurred.");
                 }
             }
         }

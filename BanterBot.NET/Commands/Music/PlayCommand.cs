@@ -15,7 +15,7 @@ namespace BanterBot.NET.Commands.Music
         [Command("play", RunMode = RunMode.Async)]
         public async Task Play(params string[] args)
         {
-            if (User is not IGuildUser user || Channel is not ITextChannel text)
+            if (Author is not IGuildUser user || Channel is not ITextChannel text)
             {
                 await ReplyAsync("This command can only be used in a server.");
                 return;

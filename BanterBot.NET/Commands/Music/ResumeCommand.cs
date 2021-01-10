@@ -14,7 +14,7 @@ namespace BanterBot.NET.Commands.Music
         [Command("resume", RunMode = RunMode.Async)]
         public async Task Resume()
         {
-            if (User is not IGuildUser user)
+            if (Author is not IGuildUser user)
             {
                 await ReplyAsync("This command can only be used in a server.");
                 return;
