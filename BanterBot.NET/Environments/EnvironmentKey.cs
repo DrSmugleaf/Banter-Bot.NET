@@ -7,6 +7,7 @@ namespace BanterBot.NET.Environments
         PostgresHost,
         PostgresUser,
         PostgresPassword,
-        PostgresDb
+        PostgresDb,
+        DatabaseUrl
     }
 }
