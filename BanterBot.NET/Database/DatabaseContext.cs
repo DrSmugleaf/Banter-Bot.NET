@@ -7,7 +7,6 @@ namespace BanterBot.NET.Database
 {
     public abstract class DatabaseContext : DbContext
     {
-        public static bool IsMigration = true;
 
         private NpgsqlConnectionStringBuilder GetConnectionString()
         {
@@ -41,7 +40,7 @@ namespace BanterBot.NET.Database
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            if (IsMigration)
+            if (DatabaseService.IsMigration)
             {
                 optionsBuilder.UseNpgsql();
                 return;

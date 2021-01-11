@@ -1,11 +1,8 @@
 using System;
 using System.Reflection;
-using BanterBot.NET.Database;
 using BanterBot.NET.Environments;
 using BanterBot.NET.Extensions;
-using BanterBot.NET.Logging;
 using Discord.WebSocket;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Victoria;
 
@@ -18,9 +15,6 @@ namespace BanterBot.NET.Dependencies
         public DependencyManager(DiscordSocketClient client)
         {
             var collection = new ServiceCollection();
-
-            DatabaseContext.IsMigration = false;
-            MigrateAllContexts();
 
             foreach (var type in Assembly.GetExecutingAssembly().DefinedTypes)
             {
@@ -62,24 +56,6 @@ namespace BanterBot.NET.Dependencies
 
             ServiceProvider = collection.BuildServiceProvider(options);
             SetDependencies(collection);
-        }
-
-        private void MigrateAllContexts()
-        {
-            foreach (var type in Assembly.GetExecutingAssembly().DefinedTypes)
-            {
-                if (!type.IsSubclassOf(typeof(DbContext)) ||
-                    type.IsAbstract)
-                {
-                    continue;
-                }
-
-                Logger.DebugS($"Creating instance of {type} for migration.");
-
-                var instance = (DbContext) (Activator.CreateInstance(type) ?? throw new InvalidOperationException());
-
-                instance.Database.Migrate();
-            }
         }
 
         private void SetDependencies(IServiceCollection collection)
