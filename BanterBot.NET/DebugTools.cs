@@ -4,7 +4,7 @@ using JetBrains.Annotations;
 
 namespace BanterBot.NET
 {
-    public class DebugTools
+    public static class DebugTools
     {
         [Conditional("DEBUG")]
         [AssertionMethod]
