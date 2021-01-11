@@ -20,5 +20,6 @@ jobs:
           mkdir -p ${{ secrets.REMOTE_PROJECT_PATH }}
           cd ${{ secrets.REMOTE_PROJECT_PATH }}
           git pull origin master
-          docker-compose up --build --no-start
-          docker-compose restart
+          docker-compose stop
+          docker-compose build
+          docker-compose start
